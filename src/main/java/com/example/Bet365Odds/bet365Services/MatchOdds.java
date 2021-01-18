@@ -61,8 +61,9 @@ public class MatchOdds implements Runnable{
         JSONArray results = obj.getJSONArray("results").getJSONObject(0).getJSONObject("main").getJSONObject("sp").getJSONObject("goal_line").getJSONArray("odds");
         JSONObject oddOver = results.getJSONObject(0);
         JSONObject oddUnder = results.getJSONObject(1);
-        list.add(oddOver.getString("odds"));
         list.add(oddUnder.getString("odds"));
+        list.add(oddOver.getString("odds"));
+
         return list;
     }
 
