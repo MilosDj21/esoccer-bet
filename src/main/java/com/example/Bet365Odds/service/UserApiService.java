@@ -1,5 +1,6 @@
 package com.example.Bet365Odds.service;
 
+import com.example.Bet365Odds.encryption.PassEncryption;
 import com.example.Bet365Odds.models.UserModel;
 import com.example.Bet365Odds.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ public class UserApiService {
     }
 
     public UserModel saveOneUserModel(UserModel user){
+        String hashedPass = PassEncryption.encrypt(user.getPassword());
+        user.setPassword(hashedPass);
         return userRepository.save(user);
     }
 
@@ -25,9 +28,10 @@ public class UserApiService {
     }
 
     public UserModel login(UserModel user){
+        String hashedPass = PassEncryption.encrypt(user.getPassword());
         List<UserModel> users = findAllUsers();
         for(UserModel m: users){
-            if(user.getUsername().equals(m.getUsername()) && user.getPassword().equals(m.getPassword())){
+            if(user.getUsername().equals(m.getUsername()) && hashedPass.equals(m.getPassword())){
                 if(m.getLoggedIn() == 1){
                     return null;
                 }else if(m.getLoggedIn() == 0){
