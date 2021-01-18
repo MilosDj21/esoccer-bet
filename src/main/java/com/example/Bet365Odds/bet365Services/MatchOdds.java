@@ -47,8 +47,25 @@ public class MatchOdds implements Runnable{
             double oddUnder = Double.parseDouble(overUnderOdds.get(0));
             double oddOver = Double.parseDouble(overUnderOdds.get(1));
 
-            //TODO:proveri da li je sinhronizovan i prosledi podatke klijentu
-            MatchModel.addMatches(new MatchModel(id, homeTeam, awayTeam, odd1, oddX, odd2, oddUnder, oddOver));
+            MatchModel model = new MatchModel(id, homeTeam, awayTeam, odd1, oddX, odd2, oddUnder, oddOver);
+            if(!MatchModel.getMatches().contains(model)){
+                MatchModel.addMatches(model);
+            }else {
+                for(MatchModel m: MatchModel.getMatches()){
+                    if(m.equals(model)){
+                        m.setHomeTeam(model.getHomeTeam());
+                        m.setAwayTeam(model.getAwayTeam());
+                        m.setOdd1(model.getOdd1());
+                        m.setOddX(model.getOddX());
+                        m.setOdd2(model.getOdd2());
+                        m.setOddUnder(model.getOddUnder());
+                        m.setOddOver(model.getOddOver());
+                    }
+                }
+            }
+
+            is.close();
+            conn.disconnect();
 
         } catch (JSONException | IOException e) {
             e.printStackTrace();
@@ -65,19 +82,6 @@ public class MatchOdds implements Runnable{
         list.add(oddOver.getString("odds"));
 
         return list;
-    }
-
-    private JSONArray doubleChanceOdds(String jsonString){
-        JSONObject obj = new JSONObject(jsonString);
-        JSONArray results = obj.getJSONArray("results").getJSONObject(0).getJSONObject("main").getJSONObject("sp").getJSONObject("double_chance").getJSONArray("odds");
-        JSONObject odd1X = results.getJSONObject(0);
-        JSONObject oddX2 = results.getJSONObject(1);
-        JSONObject odd12 = results.getJSONObject(2);
-        System.out.println(odd1X.getString("name") + " " + odd1X.getString("odds"));
-        System.out.println(oddX2.getString("name") + " " + oddX2.getString("odds"));
-        System.out.println(odd12.getString("name") + " " + odd12.getString("odds"));
-
-        return results;
     }
 
     private List<String> fullTimeOdds(String jsonString){

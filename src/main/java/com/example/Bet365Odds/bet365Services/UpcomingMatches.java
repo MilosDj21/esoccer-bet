@@ -2,6 +2,7 @@ package com.example.Bet365Odds.bet365Services;
 
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -41,22 +42,21 @@ public class UpcomingMatches implements Runnable{
                 }
 
                 //TODO: skloni interrupt kada se zavrsi testiranje
-                Thread.currentThread().interrupt();
+                //Thread.currentThread().interrupt();
 
-                Thread.sleep(5000);
+                Thread.sleep(60000);
             }
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            try {
-                is.close();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-            conn.disconnect();
-
         }
-        conn.disconnect();
+        try {
+            is.close();
+            conn.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -67,7 +67,7 @@ public class UpcomingMatches implements Runnable{
         for(int i=0;i<array.length();i++){
             object = array.getJSONObject(i);
             String leagueName = object.getJSONObject("league").getString("name");
-            if(leagueName.contains("Esoccer")){
+            if(leagueName.contains("Esoccer") && leagueName.contains("8 mins play")){
                 list.add(object);
             }
         }

@@ -35,6 +35,10 @@ public class MatchModel {
         return matches;
     }
 
+    public static synchronized void clearMatchList(){
+        matches.clear();
+    }
+
     public int getId() {
         return id;
     }
@@ -97,5 +101,15 @@ public class MatchModel {
 
     public void setOddOver(double oddOver) {
         this.oddOver = oddOver;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof MatchModel){
+            if(id == ((MatchModel) obj).id){
+                return true;
+            }
+        }
+        return false;
     }
 }
