@@ -24,7 +24,7 @@ public class UpcomingMatches implements Runnable{
         try {
             while(!Thread.currentThread().isInterrupted()){
                 MatchModel.getMatches().clear();
-                //TODO: promeni url na bet365
+                //TODO: promeni token kada uzmes novi
                 conn = (HttpURLConnection) new URL("https://api.b365api.com/v1/bet365/upcoming?sport_id=1&token=73664-ke1U5IScdIK2Ld").openConnection();
                 conn.setConnectTimeout(5000);
                 conn.setRequestProperty("Content-Type", "application/json: charset=UTF-8");
@@ -41,9 +41,6 @@ public class UpcomingMatches implements Runnable{
                     Thread t = new Thread(new MatchOdds(gameId, homeTeam, awayTeam));
                     t.start();
                 }
-
-                //TODO: skloni interrupt kada se zavrsi testiranje
-                //Thread.currentThread().interrupt();
 
                 Thread.sleep(60000);
             }

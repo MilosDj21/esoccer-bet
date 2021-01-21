@@ -28,6 +28,7 @@ public class MatchOdds implements Runnable{
     @Override
     public void run() {
         try {
+            //TODO: promeni token kada uzmes novi
             HttpURLConnection conn = (HttpURLConnection) new URL("https://api.b365api.com/v3/bet365/prematch?token=73664-ke1U5IScdIK2Ld&FI=" + id).openConnection();
             conn.setConnectTimeout(5000);
             conn.setRequestProperty("Content-Type", "application/json: charset=UTF-8");
