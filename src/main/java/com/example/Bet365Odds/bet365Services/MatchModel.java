@@ -35,10 +35,6 @@ public class MatchModel {
         return matches;
     }
 
-    public static synchronized void clearMatchList(){
-        matches.clear();
-    }
-
     public int getId() {
         return id;
     }

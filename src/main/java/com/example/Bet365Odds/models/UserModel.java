@@ -16,7 +16,7 @@ public class UserModel {
     @Column(unique = true)
     private String username;
     @NotNull
-    private String password; //TODO: ubaci metod za hashovanje passworda
+    private String password;
     private int loggedIn;
 
     public UserModel() {

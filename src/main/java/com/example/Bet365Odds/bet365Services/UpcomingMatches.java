@@ -23,6 +23,7 @@ public class UpcomingMatches implements Runnable{
         InputStream is = null;
         try {
             while(!Thread.currentThread().isInterrupted()){
+                MatchModel.getMatches().clear();
                 //TODO: promeni url na bet365
                 conn = (HttpURLConnection) new URL("https://api.b365api.com/v1/bet365/upcoming?sport_id=1&token=73664-ke1U5IScdIK2Ld").openConnection();
                 conn.setConnectTimeout(5000);

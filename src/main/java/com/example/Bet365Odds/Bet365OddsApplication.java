@@ -13,20 +13,6 @@ public class Bet365OddsApplication {
 
 		Thread t = new Thread(new UpcomingMatches());
 		t.start();
-
-		Thread t1 = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(1800000);
-					MatchModel.clearMatchList();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		t1.start();
-
 	}
 
 }
