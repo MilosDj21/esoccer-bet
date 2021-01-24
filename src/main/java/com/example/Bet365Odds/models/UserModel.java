@@ -11,7 +11,7 @@ import javax.persistence.Id;
 public class UserModel {
     @Id
     @GeneratedValue
-    private Long id;
+    private Integer id;
     @NotNull
     @Column(unique = true)
     private String username;
@@ -25,7 +25,7 @@ public class UserModel {
     public UserModel() {
     }
 
-    public UserModel(Long id, @NotNull String username, @NotNull String password, @NotNull Integer loggedIn, @NotNull String subscribedUntil) {
+    public UserModel(Integer id, @NotNull String username, @NotNull String password, @NotNull Integer loggedIn, @NotNull String subscribedUntil) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -33,11 +33,11 @@ public class UserModel {
         this.subscribedUntil = subscribedUntil;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
