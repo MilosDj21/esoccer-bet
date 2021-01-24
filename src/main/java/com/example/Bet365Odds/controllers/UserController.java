@@ -19,16 +19,6 @@ public class UserController {
         return userApiService.findAllUsers();
     }
 
-    @PostMapping("/users/login")
-    public UserModel login(@RequestBody UserModel user){
-        return userApiService.login(user);
-    }
-
-    @PostMapping("/users/logout")
-    public UserModel logout(@RequestBody UserModel user){
-        return userApiService.logout(user);
-    }
-
     @PostMapping("/users")
     public UserModel saveOne(@RequestBody UserModel user){
         return userApiService.saveOneUserModel(user);
