@@ -26,7 +26,8 @@ public class OddsController {
                         "\"oddX\":" + m.getOddX() + "," +
                         "\"odd2\":" + m.getOdd2() + "," +
                         "\"oddUnder\":" + m.getOddUnder() + "," +
-                        "\"oddOver\":" + m.getOddOver() + "}";
+                        "\"oddOver\":" + m.getOddOver() + "," +
+                        "\"overUnderOddName\":\"" + m.getOverUnderOddName() + "\"}";
                 if(!list.get(list.size()-1).equals(m)){
                     json += ",";
                 }else {

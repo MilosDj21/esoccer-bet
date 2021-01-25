@@ -47,8 +47,9 @@ public class MatchOdds implements Runnable{
             double odd2 = Double.parseDouble(fullTimeOdds.get(2));
             double oddUnder = Double.parseDouble(overUnderOdds.get(0));
             double oddOver = Double.parseDouble(overUnderOdds.get(1));
+            String oddName = overUnderOdds.get(2);
 
-            MatchModel model = new MatchModel(id, homeTeam, awayTeam, odd1, oddX, odd2, oddUnder, oddOver);
+            MatchModel model = new MatchModel(id, homeTeam, awayTeam, odd1, oddX, odd2, oddUnder, oddOver, oddName);
             if(!MatchModel.getMatches().contains(model)){
                 MatchModel.addMatches(model);
             }else {
@@ -81,6 +82,7 @@ public class MatchOdds implements Runnable{
         JSONObject oddUnder = results.getJSONObject(1);
         list.add(oddUnder.getString("odds"));
         list.add(oddOver.getString("odds"));
+        list.add(oddOver.getString("name"));
 
         return list;
     }

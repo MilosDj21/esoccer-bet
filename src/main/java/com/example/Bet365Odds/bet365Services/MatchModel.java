@@ -15,8 +15,9 @@ public class MatchModel {
     private double odd2;
     private double oddUnder;
     private double oddOver;
+    private String overUnderOddName;
 
-    public MatchModel(int id, String homeTeam, String awayTeam, double odd1, double oddX, double odd2, double oddUnder, double oddOver) {
+    public MatchModel(int id, String homeTeam, String awayTeam, double odd1, double oddX, double odd2, double oddUnder, double oddOver, String overUnderOddName) {
         this.id = id;
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
@@ -25,6 +26,7 @@ public class MatchModel {
         this.odd2 = odd2;
         this.oddUnder = oddUnder;
         this.oddOver = oddOver;
+        this.overUnderOddName = overUnderOddName;
     }
 
     public static synchronized void addMatches(MatchModel matchModel){
@@ -97,6 +99,14 @@ public class MatchModel {
 
     public void setOddOver(double oddOver) {
         this.oddOver = oddOver;
+    }
+
+    public String getOverUnderOddName() {
+        return overUnderOddName;
+    }
+
+    public void setOverUnderOddName(String overUnderOddName) {
+        this.overUnderOddName = overUnderOddName;
     }
 
     @Override
