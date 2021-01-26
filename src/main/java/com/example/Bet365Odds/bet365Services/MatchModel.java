@@ -13,20 +13,15 @@ public class MatchModel {
     private double odd1;
     private double oddX;
     private double odd2;
+    private double odd1X;
+    private double oddX2;
+    private double odd12;
     private double oddUnder;
     private double oddOver;
     private String overUnderOddName;
+    private int started;
 
-    public MatchModel(int id, String homeTeam, String awayTeam, double odd1, double oddX, double odd2, double oddUnder, double oddOver, String overUnderOddName) {
-        this.id = id;
-        this.homeTeam = homeTeam;
-        this.awayTeam = awayTeam;
-        this.odd1 = odd1;
-        this.oddX = oddX;
-        this.odd2 = odd2;
-        this.oddUnder = oddUnder;
-        this.oddOver = oddOver;
-        this.overUnderOddName = overUnderOddName;
+    public MatchModel() {
     }
 
     public static synchronized void addMatches(MatchModel matchModel){
@@ -85,6 +80,30 @@ public class MatchModel {
         this.odd2 = odd2;
     }
 
+    public double getOdd1X() {
+        return odd1X;
+    }
+
+    public void setOdd1X(double odd1X) {
+        this.odd1X = odd1X;
+    }
+
+    public double getOddX2() {
+        return oddX2;
+    }
+
+    public void setOddX2(double oddX2) {
+        this.oddX2 = oddX2;
+    }
+
+    public double getOdd12() {
+        return odd12;
+    }
+
+    public void setOdd12(double odd12) {
+        this.odd12 = odd12;
+    }
+
     public double getOddUnder() {
         return oddUnder;
     }
@@ -107,6 +126,14 @@ public class MatchModel {
 
     public void setOverUnderOddName(String overUnderOddName) {
         this.overUnderOddName = overUnderOddName;
+    }
+
+    public int getStarted() {
+        return started;
+    }
+
+    public void setStarted(int started) {
+        this.started = started;
     }
 
     @Override

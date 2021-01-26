@@ -23,9 +23,8 @@ public class UpcomingMatches implements Runnable{
         InputStream is = null;
         try {
             while(!Thread.currentThread().isInterrupted()){
-                MatchModel.getMatches().clear();
                 //TODO: promeni token kada uzmes novi
-                conn = (HttpURLConnection) new URL("https://api.b365api.com/v1/bet365/upcoming?sport_id=1&token=73664-ke1U5IScdIK2Ld").openConnection();
+                conn = (HttpURLConnection) new URL("https://api.b365api.com/v1/bet365/inplay_filter?sport_id=1&token=73664-ke1U5IScdIK2Ld").openConnection();
                 conn.setConnectTimeout(5000);
                 conn.setRequestProperty("Content-Type", "application/json: charset=UTF-8");
                 conn.setDoInput(true);
@@ -34,6 +33,7 @@ public class UpcomingMatches implements Runnable{
                 String jsonResult = streamReader(is);
 
                 List<JSONObject> eSportGames = getAllGames(jsonResult);
+                MatchModel.getMatches().clear();
                 for(JSONObject o: eSportGames){
                     String gameId = o.getString("id");
                     String homeTeam = o.getJSONObject("home").getString("name");
@@ -42,7 +42,7 @@ public class UpcomingMatches implements Runnable{
                     t.start();
                 }
 
-                Thread.sleep(60000);
+                Thread.sleep(10000);
             }
 
         } catch (IOException | InterruptedException e) {
@@ -54,8 +54,6 @@ public class UpcomingMatches implements Runnable{
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     private List<JSONObject> getAllGames(String jsonString){

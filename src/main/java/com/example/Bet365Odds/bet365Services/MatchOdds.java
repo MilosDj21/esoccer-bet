@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,18 +19,23 @@ public class MatchOdds implements Runnable{
     private String id;
     private String homeTeam;
     private String awayTeam;
+    private MatchModel matchModel;
 
     public MatchOdds(String id, String homeTeam, String awayTeam) {
         this.id = id;
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
+        matchModel = new MatchModel();
+        matchModel.setId(Integer.parseInt(id));
+        matchModel.setHomeTeam(homeTeam);
+        matchModel.setAwayTeam(awayTeam);
     }
 
     @Override
     public void run() {
         try {
             //TODO: promeni token kada uzmes novi
-            HttpURLConnection conn = (HttpURLConnection) new URL("https://api.b365api.com/v3/bet365/prematch?token=73664-ke1U5IScdIK2Ld&FI=" + id).openConnection();
+            HttpURLConnection conn = (HttpURLConnection) new URL("https://api.b365api.com/v1/bet365/event?token=73664-ke1U5IScdIK2Ld&FI=" + id).openConnection();
             conn.setConnectTimeout(5000);
             conn.setRequestProperty("Content-Type", "application/json: charset=UTF-8");
             conn.setDoInput(true);
@@ -38,30 +44,25 @@ public class MatchOdds implements Runnable{
             InputStream is = conn.getInputStream();
             String jsonResult = streamReader(is);
 
-            List<String> fullTimeOdds = fullTimeOdds(jsonResult);
-            List<String> overUnderOdds = goalsOverUnder(jsonResult);
+            fullTimeOdds(jsonResult);
+            doubleChanceOdds(jsonResult);
+            goalsOverUnder(jsonResult);
 
-            int id = Integer.parseInt(this.id);
-            double odd1 = Double.parseDouble(fullTimeOdds.get(0));
-            double oddX = Double.parseDouble(fullTimeOdds.get(1));
-            double odd2 = Double.parseDouble(fullTimeOdds.get(2));
-            double oddUnder = Double.parseDouble(overUnderOdds.get(0));
-            double oddOver = Double.parseDouble(overUnderOdds.get(1));
-            String oddName = overUnderOdds.get(2);
-
-            MatchModel model = new MatchModel(id, homeTeam, awayTeam, odd1, oddX, odd2, oddUnder, oddOver, oddName);
-            if(!MatchModel.getMatches().contains(model)){
-                MatchModel.addMatches(model);
+            if(!MatchModel.getMatches().contains(matchModel)){
+                MatchModel.addMatches(matchModel);
             }else {
                 for(MatchModel m: MatchModel.getMatches()){
-                    if(m.equals(model)){
-                        m.setHomeTeam(model.getHomeTeam());
-                        m.setAwayTeam(model.getAwayTeam());
-                        m.setOdd1(model.getOdd1());
-                        m.setOddX(model.getOddX());
-                        m.setOdd2(model.getOdd2());
-                        m.setOddUnder(model.getOddUnder());
-                        m.setOddOver(model.getOddOver());
+                    if(m.equals(matchModel)){
+                        m.setHomeTeam(matchModel.getHomeTeam());
+                        m.setAwayTeam(matchModel.getAwayTeam());
+                        m.setOdd1(matchModel.getOdd1());
+                        m.setOddX(matchModel.getOddX());
+                        m.setOdd2(matchModel.getOdd2());
+                        m.setOdd1X(matchModel.getOdd1X());
+                        m.setOddX2(matchModel.getOddX2());
+                        m.setOdd12(matchModel.getOdd12());
+                        m.setOddUnder(matchModel.getOddUnder());
+                        m.setOddOver(matchModel.getOddOver());
                     }
                 }
             }
@@ -74,30 +75,61 @@ public class MatchOdds implements Runnable{
         }
     }
 
-    private List<String> goalsOverUnder(String jsonString){
-        List<String> list = new ArrayList<>();
-        JSONObject obj = new JSONObject(jsonString);
-        JSONArray results = obj.getJSONArray("results").getJSONObject(0).getJSONObject("main").getJSONObject("sp").getJSONObject("goal_line").getJSONArray("odds");
-        JSONObject oddOver = results.getJSONObject(0);
-        JSONObject oddUnder = results.getJSONObject(1);
-        list.add(oddUnder.getString("odds"));
-        list.add(oddOver.getString("odds"));
-        list.add(oddOver.getString("name"));
+    private void goalsOverUnder(String jsonString){
+        JSONArray array = new JSONObject(jsonString).getJSONArray("results").getJSONArray(0);
+        for(int i=0;i<array.length();i++){
+            JSONObject mgObject = array.getJSONObject(i);
+            if(mgObject.getString("type").equals("MG") && mgObject.getString("ID").equals("421")){
+                String bound = array.getJSONObject(i + 2).getString("NA");
+                String over = array.getJSONObject(i + 4).getString("OD");
+                String under = array.getJSONObject(i + 6).getString("OD");
 
-        return list;
+                matchModel.setOverUnderOddName(bound);
+                matchModel.setOddUnder(getOddFromString(under));
+                matchModel.setOddOver(getOddFromString(over));
+
+            }
+        }
     }
 
-    private List<String> fullTimeOdds(String jsonString){
-        List<String> list = new ArrayList<>();
-        JSONObject obj = new JSONObject(jsonString);
-        JSONArray results = obj.getJSONArray("results").getJSONObject(0).getJSONObject("main").getJSONObject("sp").getJSONObject("full_time_result").getJSONArray("odds");
-        JSONObject odd1 = results.getJSONObject(0);
-        JSONObject oddX = results.getJSONObject(1);
-        JSONObject odd2 = results.getJSONObject(2);
-        list.add(odd1.getString("odds"));
-        list.add(oddX.getString("odds"));
-        list.add(odd2.getString("odds"));
-        return list;
+    private void doubleChanceOdds(String jsonString){
+        JSONArray array = new JSONObject(jsonString).getJSONArray("results").getJSONArray(0);
+        for(int i=0;i<array.length();i++){
+            JSONObject mgObject = array.getJSONObject(i);
+            if(mgObject.getString("type").equals("MG") && mgObject.getString("ID").equals("10115")){
+                String odd1X = array.getJSONObject(i + 2).getString("OD");
+                String oddX2 = array.getJSONObject(i + 3).getString("OD");
+                String odd12 = array.getJSONObject(i + 4).getString("OD");
+
+                matchModel.setOdd1X(getOddFromString(odd1X));
+                matchModel.setOddX2(getOddFromString(oddX2));
+                matchModel.setOdd12(getOddFromString(odd12));
+            }
+        }
+    }
+
+    private void fullTimeOdds(String jsonString){
+        JSONArray array = new JSONObject(jsonString).getJSONArray("results").getJSONArray(0);
+        for(int i=0;i<array.length();i++){
+            JSONObject mgObject = array.getJSONObject(i);
+            if(mgObject.getString("type").equals("MG") && mgObject.getString("ID").equals("1777")){
+                String odd1 = array.getJSONObject(i + 2).getString("OD");
+                String oddX = array.getJSONObject(i + 3).getString("OD");
+                String odd2 = array.getJSONObject(i + 4).getString("OD");
+
+                matchModel.setOdd1(getOddFromString(odd1));
+                matchModel.setOddX(getOddFromString(oddX));
+                matchModel.setOdd2(getOddFromString(odd2));
+            }
+        }
+        matchModel.setStarted(Integer.parseInt(array.getJSONObject(0).getString("TT")));
+    }
+
+    private double getOddFromString(String odd){
+        String[] array = odd.split("/");
+        double d = 1 + Double.parseDouble(array[0]) / Double.parseDouble(array[1]);
+        DecimalFormat df = new DecimalFormat("#.##");
+        return  Double.parseDouble(df.format(d));
     }
 
     private String streamReader(InputStream stream){
