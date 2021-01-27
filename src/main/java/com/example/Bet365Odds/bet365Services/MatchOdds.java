@@ -122,7 +122,15 @@ public class MatchOdds implements Runnable{
                 matchModel.setOdd2(getOddFromString(odd2));
             }
         }
-        matchModel.setStarted(Integer.parseInt(array.getJSONObject(0).getString("TT")));
+        String started = array.getJSONObject(0).getString("TT");
+        String mins = array.getJSONObject(0).getString("TM");
+        String sec = array.getJSONObject(0).getString("TS");
+        if(started.equals("0") && mins.equals("0") && sec.equals("0")){
+            matchModel.setStarted(0);
+        }else{
+            matchModel.setStarted(1);
+        }
+
     }
 
     private double getOddFromString(String odd){
