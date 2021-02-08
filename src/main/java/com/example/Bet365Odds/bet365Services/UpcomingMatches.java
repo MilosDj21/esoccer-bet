@@ -24,7 +24,7 @@ public class UpcomingMatches implements Runnable{
         try {
             while(!Thread.currentThread().isInterrupted()){
                 //TODO: promeni token kada uzmes novi
-                conn = (HttpURLConnection) new URL("https://api.b365api.com/v1/bet365/inplay_filter?sport_id=1&token=73510-dKGX4Zgh2ekp0C").openConnection();
+                conn = (HttpURLConnection) new URL("https://api.b365api.com/v1/bet365/inplay_filter?sport_id=1&token=73664-ke1U5IScdIK2Ld").openConnection();
                 conn.setConnectTimeout(5000);
                 conn.setRequestProperty("Content-Type", "application/json: charset=UTF-8");
                 conn.setDoInput(true);
