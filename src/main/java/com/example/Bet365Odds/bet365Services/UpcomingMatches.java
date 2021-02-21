@@ -21,10 +21,11 @@ public class UpcomingMatches implements Runnable{
 
         HttpURLConnection conn = null;
         InputStream is = null;
-        try {
-            while(!Thread.currentThread().isInterrupted()){
+
+        while(true){
+            try {
                 //TODO: promeni token kada uzmes novi
-                conn = (HttpURLConnection) new URL("https://api.b365api.com/v1/bet365/inplay_filter?sport_id=1&token=73664-ke1U5IScdIK2Ld").openConnection();
+                conn = (HttpURLConnection) new URL("https://api.b365api.com/v1/bet365/inplay_filter?sport_id=1&token=73510-dKGX4Zgh2ekp0C").openConnection();
                 conn.setConnectTimeout(5000);
                 conn.setRequestProperty("Content-Type", "application/json: charset=UTF-8");
                 conn.setDoInput(true);
@@ -34,25 +35,24 @@ public class UpcomingMatches implements Runnable{
 
                 List<JSONObject> eSportGames = getAllGames(jsonResult);
                 MatchModel.getMatches().clear();
-                for(JSONObject o: eSportGames){
+                for (JSONObject o : eSportGames) {
                     String gameId = o.getString("id");
                     String homeTeam = o.getJSONObject("home").getString("name");
                     String awayTeam = o.getJSONObject("away").getString("name");
                     Thread t = new Thread(new MatchOdds(gameId, homeTeam, awayTeam));
                     t.start();
                 }
-
                 Thread.sleep(10000);
             }
-
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        try {
-            is.close();
-            conn.disconnect();
-        } catch (Exception e) {
-            e.printStackTrace();
+            catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+                try {
+                    is.close();
+                    conn.disconnect();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
         }
     }
 
