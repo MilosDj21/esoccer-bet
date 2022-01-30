@@ -25,9 +25,9 @@ public class UpcomingMatches implements Runnable{
         while(true){
             try {
                 //TODO: promeni token kada uzmes novi
-                conn = (HttpURLConnection) new URL("https://api.b365api.com/v1/bet365/inplay_filter?sport_id=1&token=74978-Ac8xiivPuhouM0").openConnection();
+                conn = (HttpURLConnection) new URL("https://api.b365api.com/v1/bet365/inplay_filter?sport_id=1&token=TOKEN").openConnection();
                 conn.setConnectTimeout(5000);
-                conn.setRequestProperty("Content-Type", "application/json: charset=UTF-8");
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
                 is = conn.getInputStream();
@@ -41,6 +41,8 @@ public class UpcomingMatches implements Runnable{
                     String awayTeam = o.getJSONObject("away").getString("name");
                     Thread t = new Thread(new MatchOdds(gameId, homeTeam, awayTeam));
                     t.start();
+                    Thread t1 = new Thread(new MatchResultApi(gameId, homeTeam, awayTeam));
+                    t1.start();
                 }
                 Thread.sleep(10000);
             }

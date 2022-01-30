@@ -35,9 +35,9 @@ public class MatchOdds implements Runnable{
     public void run() {
         try {
             //TODO: promeni token kada uzmes novi
-            HttpURLConnection conn = (HttpURLConnection) new URL("https://api.b365api.com/v1/bet365/event?token=74978-Ac8xiivPuhouM0&FI=" + id).openConnection();
+            HttpURLConnection conn = (HttpURLConnection) new URL("https://api.b365api.com/v1/bet365/event?token=TOKEN&FI=" + id).openConnection();
             conn.setConnectTimeout(5000);
-            conn.setRequestProperty("Content-Type", "application/json: charset=UTF-8");
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             conn.setDoInput(true);
             conn.setDoOutput(true);
 
